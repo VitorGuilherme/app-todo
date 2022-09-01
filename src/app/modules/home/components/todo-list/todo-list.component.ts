@@ -10,40 +10,44 @@ import { TaskList } from './../../model/task-list';
 })
 export class TodoListComponent implements DoCheck {
 
-  public taskList: Array<TaskList> = [
-  ];
+  public taskList: Array<TaskList> = JSON.parse(localStorage.getItem("list") || '[]');
 
   constructor() { }
 
   ngDoCheck(): void {
-    this.taskList.sort( (first, last) => Number(first.checked) - Number(last.checked));
+    this.taskList.sort((first, last) => Number(first.checked) - Number(last.checked));
+    localStorage.setItem("list", JSON.stringify(this.taskList));
+  }
+  public setEmitTaskList(event: string) {
+    this.taskList.push({ task: event, checked: false });
   }
 
-  public setEmitTaskList(event: string) {
-  this.taskList.push({task:event, checked: false});
-  } 
-
-  public deleteItemTaskList(event:number){
+  public deleteItemTaskList(event: number) {
     this.taskList.splice(event, 1);
   }
 
-  public deleteAllTaskList(){
+  public deleteAllTaskList() {
     const confirm = window.confirm("Você deseja realmente Deletar tudo?");
 
-    if(confirm){
+    if (confirm) {
       this.taskList = [];
     }
   }
 
   public validationInput(event: string, index: number) {
-    
-    if(!event.length){
-    const confirm = window.confirm("Sua task está vazia, deseja Deletar?");
 
-    if(confirm){
-      this.deleteItemTaskList(index);
+    if (!event.length) {
+      const confirm = window.confirm("Sua task está vazia, deseja Deletar?");
+
+      if (confirm) {
+        this.deleteItemTaskList(index);
+      }
     }
   }
-  }
 
+  //Preferi não colocar nada aqui porque não estava funcionando o 'sort'
+  //Chose not to put the code here because the sort buttom wasnt fworking
+  public setLocalStorage() {
+
+  }
 }
